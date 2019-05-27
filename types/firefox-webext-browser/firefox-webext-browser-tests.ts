@@ -10,7 +10,7 @@ browser._manifest; // $ExpectError
 // browser.runtime
 const port = browser.runtime.connect();
 port.postMessage(); // $ExpectError
-port.postMessage({test: "ok"});
+port.postMessage({ test: "ok" });
 
 port.onDisconnect.addListener((p) => {
     if (p.error) {
@@ -31,18 +31,25 @@ browser.proxy.onProxyError.addListener(error => {
 browser.proxy.onRequest.addListener(d => {
     console.log(d.requestId);
 }, {
-    urls: ['test']
-}, ["requestHeaders"]);
+        urls: ['test']
+    }, ["requestHeaders"]);
 
 browser.webNavigation.onBeforeNavigate.addListener(d => {
     console.log(d.url, d.timeStamp);
 }, {
-    url: [
-        {hostContains: 'something'},
-        {hostPrefix: 'somethineelse'}
-    ]
-});
+        url: [
+            { hostContains: 'something' },
+            { hostPrefix: 'somethineelse' }
+        ]
+    });
 
 browser.runtime.connect().onDisconnect.addListener(() => {
     console.log('ok');
+});
+
+browser.storage.onChanged.addListener((changes, area) => {
+    for (const key in changes) {
+        console.log(changes[key].oldValue);
+        console.log(changes[key].newValue);
+    }
 });
